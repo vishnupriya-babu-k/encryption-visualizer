@@ -1,0 +1,36 @@
+body {
+    background-image: url('https://www.kaspersky.com/content/en-global/images/repository/isc/2021/encryption-1.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    color: white;
+    font-family: 'Arial', sans-serif;
+}
+
+.container {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 2rem;
+    border-radius: 10px;
+    margin-top: 30px;
+}
+
+h1, h3, h5 {
+    margin-bottom: 1rem;
+}
+
+.navbar {
+    margin-bottom: 30px;
+}
+
+.nav-link {
+    color: white !important;
+}
+nav{
+    color: white;
+}
+p{
+    text-align: center;
+}
+img {
+    display: block;
+    margin: 0 auto;
+}

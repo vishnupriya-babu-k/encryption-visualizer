@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cipher Encryption & Decryption Visualizer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('https://www.kaspersky.com/content/en-global/images/repository/isc/2021/encryption-1.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            color: white;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        h1, h3, h5 {
+            margin-bottom: 1rem;
+        }
+        .form-label, .bg-white {
+            font-size: 1.2rem;
+        }
+        .cipher-card {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+        .btn {
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .btn:hover {
+            background-color: #0056b3; /* Darker blue */
+            transform: scale(1.05);
+        }
+        .progress {
+            height: 30px;
+        }
+        .progress-bar {
+            font-size: 1.1rem;
+        }
+        .attempts-log {
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+            color: #f8f9fa; /* Light text */
+        }
+        .navbar {
+            margin-bottom: 30px;
+        }
+        .nav-link {
+            color: white !important;
+        }
+        .breaking-section {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+        .breaking-section h5 {
+            margin-bottom: 1rem;
+        }
+        .progress-container {
+            margin-bottom: 1rem;
+        }
+        .attempts-log {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+        /* New header styling */
+        .header {
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .header p {
+            font-size: 1.2rem;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Cipher Visualizer</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="C:\ISproject\ceasar.html">Caesar Cipher</a></li>
+                    <li class="nav-item"><a class="nav-link" href="C:\ISproject\vignere.html">Vigenère Cipher</a></li>
+                    <li class="nav-item"><a class="nav-link" href="C:\ISproject\aes.html">AES Cipher</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>Cipher Encryption & Decryption Visualizer</h1>
+            <p>Explore and visualize different cipher techniques</p>
+        </div>
+        <div class="mb-5">
+            <h3 class="text-center">Enter Plain Text</h3>
+            <div class="mb-3">
+                <label for="plainText" class="form-label">Plain Text</label>
+                <input type="text" id="plainText" class="form-control" placeholder="Type your plain text here..." aria-label="Plain Text">
+            </div>
+        </div>
+
+        <h3 class="text-center">Cipher Types and Key Structures</h3>
+        <div class="row">
+            <div id="caesar" class="cipher-card col-md-4">
+                <h5>Caesar Cipher</h5>
+                <p>Uses a fixed shift value for encryption. Example: Shift by 3.</p>
+                <div class="mb-3">
+                    <label for="caesarShift" class="form-label">Shift Value</label>
+                    <input type="number" id="caesarShift" class="form-control" placeholder="Enter shift value" aria-label="Shift Value">
+                </div>
+                <button class="btn btn-primary" onclick="caesarEncrypt()">Encrypt with Caesar</button>
+            </div>
+
+            <div id="vigenere" class="cipher-card col-md-4">
+                <h5>Vigenère Cipher</h5>
+                <p>Uses a keyword for encryption. Each letter of the keyword shifts the corresponding letter of the plaintext.</p>
+                <div class="mb-3">
+                    <label for="vigenereKey" class="form-label">Key</label>
+                    <input type="text" id="vigenereKey" class="form-control" placeholder="Enter keyword" aria-label="Vigenère Key">
+                </div>
+                <button class="btn btn-primary" onclick="vigenereEncrypt()">Encrypt with Vigenère</button>
+            </div>
+
+            <div id="aes" class="cipher-card col-md-4">
+                <h5>AES Cipher</h5>
+                <p>Uses a secret key to encrypt data in blocks. Keys can be 128, 192, or 256 bits.</p>
+                <div class="mb-3">
+                    <label for="aesKey" class="form-label">Key</label>
+                    <input type="text" id="aesKey" class="form-control" placeholder="Enter secret key" aria-label="AES Key">
+                </div>
+                <button class="btn btn-primary" onclick="aesEncrypt()">Encrypt with AES</button>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <h3 class="text-center">Results</h3>
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Caesar Result</h5>
+                    <p id="caesarResult" class="bg-white p-2 border text-dark"></p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Vigenère Result</h5>
+                    <p id="vigenereResult" class="bg-white p-2 border text-dark"></p>
+                </div>
+                <div class="col-md-4">
+                    <h5>AES Result</h5>
+                    <p id="aesResult" class="bg-white p-2 border text-dark"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mb-4">
+            <button class="btn btn-warning" onclick="breakCipher()">Break Cipher</button>
+        </div>
+
+        <div class="breaking-section">
+            <h3 class="text-center">Breaking Ciphers</h3>
+
+            <div class="progress-container">
+                <h5>Breaking Caesar Cipher</h5>
+                <div class="progress">
+                    <div id="caesarProgress" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" style="width: 0%">0%</div>
+                </div>
+                <div id="caesarAttempts" class="attempts-log"></div>
+            </div>
+
+            <div class="progress-container">
+                <h5>Breaking Vigenère Cipher</h5>
+                <div class="progress">
+                    <div id="vigenereProgress" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" style="width: 0%">0%</div>
+                </div>
+                <p id="vigenereBar" class="text-white"></p>
+                <div id="vigenereAttempts" class="attempts-log"></div>
+            </div>
+
+            <div class="progress-container">
+                <h5>Breaking AES Cipher</h5>
+                <p id="aesBreakingStatus" class="text-warning">This cipher is extremely difficult to break without the key.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <script>
+        // Example of a simple Caesar Cipher encryption
+        function caesarEncrypt() {
+            const plainText = document.getElementById("plainText").value.toLowerCase();
+            const shift = parseInt(document.getElementById("caesarShift").value);
+            let encryptedText = '';
+
+            for (let char of plainText) {
+                if (char.match(/[a-z]/)) {
+                    const code = char.charCodeAt();
+                    const shifted = (code - 97 + shift) % 26 + 97; // 'a' = 97
+                    encryptedText += String.fromCharCode(shifted);
+                } else {
+                    encryptedText += char; // Non-alphabetical characters remain unchanged
+                }
+            }
+
+            document.getElementById("caesarResult").innerText = encryptedText;
+        }
+
+        // Vigenère Cipher Encryption
+        function vigenereEncrypt() {
+            const plainText = document.getElementById("plainText").value;
+            const key = document.getElementById("vigenereKey").value.toLowerCase();
+            let encryptedText = '';
+            let keyIndex = 0;
+
+            for (let i = 0; i < plainText.length; i++) {
+                const char = plainText[i];
+                if (char.match(/[a-zA-Z]/)) {
+                    const code = char.charCodeAt();
+                    const base = (code >= 65 && code <= 90) ? 65 : 97; // A or a
+                    const shift = key.charCodeAt(keyIndex % key.length) - 97; // shift based on key
+                    encryptedText += String.fromCharCode(((code - base + shift) % 26) + base);
+                    keyIndex++;
+                } else {
+                    encryptedText += char; // Non-alphabetical characters remain unchanged
+                }
+            }
+
+            document.getElementById("vigenereResult").innerText = encryptedText;
+        }
+
+        // AES Cipher Encryption
+        function aesEncrypt() {
+            const plainText = document.getElementById("plainText").value;
+            const key = document.getElementById("aesKey").value;
+
+            if (!key) {
+                document.getElementById("aesResult").innerText = "AES key is required";
+                return;
+            }
+
+            try {
+                const encrypted = CryptoJS.AES.encrypt(plainText, key).toString();
+                document.getElementById("aesResult").innerText = encrypted;
+            } catch (error) {
+                document.getElementById("aesResult").innerText = "AES encryption failed";
+            }
+        }
+
+        // Function to break Caesar cipher
+        function breakCaesarCipher() {
+            const caesarText = document.getElementById("caesarResult").innerText;
+            const originalText = document.getElementById("plainText").value;
+            const attemptsLog = document.getElementById('caesarAttempts');
+            attemptsLog.innerHTML = ''; // Clear previous attempts
+            let progress = 0;
+
+            for (let shift = 0; shift < 26; shift++) {
+                let decryptedText = '';
+                for (let char of caesarText) {
+                    if (char.match(/[a-zA-Z]/)) {
+                        const code = char.charCodeAt();
+                        const base = (code >= 65 && code <= 90) ? 65 : 97; // A or a
+                        decryptedText += String.fromCharCode(((code - base - shift + 26) % 26) + base);
+                    } else {
+                        decryptedText += char; // Non-alphabetical characters remain unchanged
+                    }
+                }
+                
+                // Log the attempt
+                attemptsLog.innerHTML += `<div>Shift ${shift}: ${decryptedText}</div>`;
+
+                // Update progress
+                progress += (100 / 26); // Increment progress by the percentage of total shifts
+                document.getElementById('caesarProgress').style.width = `${progress}%`;
+                document.getElementById('caesarProgress').innerText = `${Math.floor(progress)}%`;
+
+                // Check if decrypted text matches the original
+                if (decryptedText === originalText) {
+                    console.log(`Caesar Cipher broken with shift ${shift}`);
+                    return; // Exit if match is found
+                }
+            }
+
+            console.log(`Failed to break Caesar Cipher`);
+        }
+
+        // Function to break Vigenère cipher
+        async function breakVigenereCipher() {
+            const encryptedText = document.getElementById("vigenereResult").innerText;
+            const originalText = document.getElementById("plainText").value;
+            const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+            const maxKeyLength = 5; // Max length of key to attempt
+            const attemptsLog = document.getElementById('vigenereAttempts');
+            attemptsLog.innerHTML = ''; // Clear previous attempts
+
+            // Loop over key lengths
+            for (let length = 1; length <= maxKeyLength; length++) {
+                let keyArray = Array(length).fill(0);
+                const totalAttempts = Math.pow(alphabet.length, length); // Total combinations for current key length
+                let vigenereProgress = 0; // Reset progress for current key length
+
+                while (true) {
+                    // Generate the current key from keyArray
+                    let currentKey = keyArray.map(index => alphabet[index]).join('');
+                    let decryptedText = vigenereDecrypt(encryptedText, currentKey);
+
+                    // Log the attempt
+                    attemptsLog.innerHTML += `<div>Key: ${currentKey}, Decrypted: ${decryptedText}</div>`;
+                    
+                    // Update progress
+                    vigenereProgress++;
+                    document.getElementById('vigenereProgress').style.width = `${(vigenereProgress / totalAttempts) * 100}%`;
+                    document.getElementById('vigenereProgress').innerText = `Key: ${currentKey}, Attempt: ${vigenereProgress}/${totalAttempts}`;
+
+                    // Check if decrypted text matches the original
+                    if (decryptedText === originalText) {
+                        console.log(`Vigenère Cipher broken with key ${currentKey}`);
+                        document.getElementById('vigenereBar').textContent = `Key found: ${currentKey}. Decrypted text: ${decryptedText}`;
+                        return; // Return when match is found
+                    }
+
+                    // Increment key
+                    let position = length - 1;
+                    while (position >= 0) {
+                        if (keyArray[position] < alphabet.length - 1) {
+                            keyArray[position]++;
+                            break;
+                        } else {
+                            keyArray[position] = 0;
+                            position--;
+                        }
+                    }
+
+                    // If we've reset all positions, we are done
+                    if (position < 0) {
+                        break;
+                    }
+
+                    // Allow UI to update before continuing
+                    await new Promise(resolve => setTimeout(resolve, 10)); // Small delay to let the browser render
+                }
+            }
+
+            console.log(`Failed to break Vigenère Cipher`);
+            document.getElementById('vigenereBar').textContent = `Failed to break Vigenère Cipher`;
+        }
+
+        // Vigenère Decryption Helper
+        function vigenereDecrypt(encryptedText, key) {
+            const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+            let decryptedText = '';
+            let keyIndex = 0;
+
+            for (let i = 0; i < encryptedText.length; i++) {
+                const char = encryptedText[i];
+                if (char.match(/[a-zA-Z]/)) {
+                    const code = char.charCodeAt();
+                    const base = (code >= 65 && code <= 90) ? 65 : 97; // A or a
+                    const shift = key.charCodeAt(keyIndex % key.length) - 97; // shift based on key
+                    decryptedText += String.fromCharCode(((code - base - shift + 26) % 26) + base);
+                    keyIndex++;
+                } else {
+                    decryptedText += char; // Non-alphabetical characters remain unchanged
+                }
+            }
+            return decryptedText;
+        }
+
+        // Function to break ciphers
+        async function breakCipher() {
+            // Start breaking Caesar and Vigenère ciphers
+            breakCaesarCipher();
+            await breakVigenereCipher();
+
+            // AES breaking is too complex to be simulated
+            document.getElementById("aesBreakingStatus").innerText = "AES is practically unbreakable without the key.";
+        }
+    </script>
+</body>
+</html>
